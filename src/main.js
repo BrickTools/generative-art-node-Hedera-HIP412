@@ -43,16 +43,16 @@ const cleanName = _str => {
 
 const getElements = path => {
   return fs
-    .readdirSync(path)
-    .filter((item) => !/(^|\/)\.[^\/\.]/g.test(item))
-    .map((i, index) => {
-      return {
-        id: index + 1,
-        name: cleanName(i),
-        fileName: i,
-        rarity: addRarity(i),
-      };
-    });
+      .readdirSync(path)
+      .filter((item) => !/(^|\/)\.[^\/\.]/g.test(item))
+      .map((i, index) => {
+        return {
+          id: index + 1,
+          name: cleanName(i),
+          fileName: i,
+          rarity: addRarity(i),
+        };
+      });
 };
 
 const layersSetup = layersOrder => {
@@ -111,17 +111,17 @@ const addAttributes = (_element, _layer) => {
 const drawLayer = async (_layer, _edition) => {
   const rand = Math.random();
   let element =
-    _layer.elements[Math.floor(rand * _layer.number)] ? _layer.elements[Math.floor(rand * _layer.number)] : null;
+      _layer.elements[Math.floor(rand * _layer.number)] ? _layer.elements[Math.floor(rand * _layer.number)] : null;
   if (element) {
     addAttributes(element, _layer);
     const image = await loadImage(`${_layer.location}${element.fileName}`);
 
     ctx.drawImage(
-      image,
-      _layer.position.x,
-      _layer.position.y,
-      _layer.size.width,
-      _layer.size.height
+        image,
+        _layer.position.x,
+        _layer.position.y,
+        _layer.size.width,
+        _layer.size.height
     );
     saveLayer(canvas, _edition);
   }
@@ -131,27 +131,27 @@ const createFiles = async edition => {
   const layers = layersSetup(layersOrder);
 
   let numDupes = 0;
- for (let i = 1; i <= edition; i++) {
-   await layers.forEach(async (layer) => {
-     await drawLayer(layer, i);
-   });
+  for (let i = 1; i <= edition; i++) {
+    await layers.forEach(async (layer) => {
+      await drawLayer(layer, i);
+    });
 
-   let key = hash.toString();
-   if (Exists.has(key)) {
-     console.log(
-       `Duplicate creation for edition ${i}. Same as edition ${Exists.get(
-         key
-       )}`
-     );
-     numDupes++;
-     if (numDupes > edition) break; //prevents infinite loop if no more unique items can be created
-     i--;
-   } else {
-     Exists.set(key, i);
-     addMetadata(i);
-     console.log("Creating edition " + i);
-   }
- }
+    let key = hash.toString();
+    if (Exists.has(key)) {
+      console.log(
+          `Duplicate creation for edition ${i}. Same as edition ${Exists.get(
+              key
+          )}`
+      );
+      numDupes++;
+      if (numDupes > edition) break; //prevents infinite loop if no more unique items can be created
+      i--;
+    } else {
+      Exists.set(key, i);
+      addMetadata(i);
+      console.log("Creating edition " + i);
+    }
+  }
 };
 
 const createMetaData = () => {
@@ -159,7 +159,7 @@ const createMetaData = () => {
     if(err == null || err.code === 'ENOENT') {
       fs.writeFileSync(`${buildDir}/${metDataFile}`, JSON.stringify(metadata, null, 2));
     } else {
-        console.log('Oh no, error: ', err.code);
+      console.log('Oh no, error: ', err.code);
     }
   });
 };
